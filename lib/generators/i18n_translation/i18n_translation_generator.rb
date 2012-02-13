@@ -27,7 +27,7 @@ class I18nTranslationGenerator < Rails::Generators::NamedBase
     end
 
     unless (yaml_string = yaml.to_s(true)).blank?
-      create_file "config/locales/translation_#{locale_name}.yml", yaml_string
+      create_file "config/locales/translation_#{locale_name}.yml", RUBY_VERSION > '1.9' ? yaml_string.force_encoding('ASCII-8BIT') : yaml_string
     end
   end
 
