@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'uri'
 
 module I27r
   class TranslationError < StandardError; end
@@ -27,6 +28,10 @@ module I27r
       w = CGI.escape ActiveSupport::Inflector.humanize(word)
 
       agent = Mechanize.new
+      if ENV['http_proxy']
+        proxy_url = URI.parse(ENV['http_proxy'])
+        agent.set_proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
+      end
       url = "http://babelfish.yahoo.com/translate_txt?lp=en_#{lang}&trtext=#{w}"
       page = agent.get(url)
       page.search('#result div').text
